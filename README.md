@@ -1,365 +1,336 @@
-# 🪙 Coin Counting & Classification System
+# CoinVision 🪙
 
-> A computer vision system for automatically **detecting, separating, counting, and classifying coins** from images using classical image-processing techniques.
+### Computer Vision Coin Counting & Classification System
 
-<p align="center">
-  <b>Python • OpenCV • Watershed Segmentation • Otsu Thresholding • Image Processing</b>
-</p>
+![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge\&logo=python)
+![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green?style=for-the-badge\&logo=opencv)
+![NumPy](https://img.shields.io/badge/NumPy-Image%20Processing-blue?style=for-the-badge\&logo=numpy)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?style=for-the-badge\&logo=jupyter)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
----
-
-## 📌 Overview
-
-This project implements an end-to-end **coin detection and classification pipeline** using Python and OpenCV.
-
-The system processes an input image, separates coins from the background, handles touching coins using **Watershed Segmentation**, detects individual coins, classifies them according to their size, and calculates the final coin count and value.
-
-The project also includes **evaluation metrics, failure-case analysis, batch processing, visualizations, and an interactive interface** for testing images.
+> Computer Vision system for automatically **detecting, separating, counting, and classifying coins** using classical image-processing techniques including Otsu thresholding, morphological operations, distance transform, and Watershed segmentation.
 
 ---
 
-## ✨ Features
+# 📌 Project Overview
 
-| Feature                         | Description                                                         |
-| ------------------------------- | ------------------------------------------------------------------- |
-| 🔍 **Coin Detection**           | Automatically detects coins from input images                       |
-| 🔢 **Coin Counting**            | Counts the number of detected coins                                 |
-| 🧩 **Touching Coin Separation** | Uses Watershed Segmentation to separate connected coins             |
-| 🪙 **Coin Classification**      | Classifies detected coins using their measured radius               |
-| 💰 **Value Calculation**        | Calculates the total value based on predicted classes               |
-| 🖼️ **Image Preprocessing**     | CLAHE, Gaussian Blur, thresholding, and morphology                  |
-| 📊 **Evaluation**               | Calculates accuracy, MAE, RMSE, over-detection, and under-detection |
-| ⚖️ **Threshold Comparison**     | Compares Otsu and Adaptive Thresholding                             |
-| 🔬 **Failure Analysis**         | Identifies and analyzes incorrectly processed images                |
-| 📁 **Batch Processing**         | Processes multiple coin images automatically                        |
-| 💾 **CSV Export**               | Saves experiment results for further analysis                       |
-| 🖥️ **Interactive GUI**         | Provides an `ipywidgets` interface for testing images               |
+CoinVision is a university **Computer Vision & Digital Image Processing** project focused on automated coin analysis.
+
+The system processes coin images and performs:
+
+* 🪙 Automatic coin detection
+* 🔢 Coin counting
+* 🧩 Touching coin separation
+* 📏 Size-based classification
+* 💰 Total value calculation
+* 📊 Detection performance evaluation
+* 🔬 Failure-case analysis
+
+The project uses a complete classical computer vision pipeline instead of deep learning.
 
 ---
 
-## 🧠 How It Works
-
-The project follows this image-processing pipeline:
+# 🔄 Computer Vision Pipeline
 
 ```text
-                    ┌─────────────────┐
-                    │   Input Image   │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    Grayscale    │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │      CLAHE      │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │  Gaussian Blur  │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ Otsu Threshold  │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   Morphology    │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │Distance Transform│
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    Watershed    │
-                    │  Segmentation   │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ Coin Detection  │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ Classification  │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ Count & Value   │
-                    └─────────────────┘
+Input Image
+     ↓
+Grayscale Conversion
+     ↓
+CLAHE Enhancement
+     ↓
+Gaussian Blur
+     ↓
+Otsu Thresholding
+     ↓
+Morphological Processing
+     ↓
+Distance Transform
+     ↓
+Watershed Segmentation
+     ↓
+Connected Components
+     ↓
+Coin Detection
+     ↓
+Size Classification
+     ↓
+Count & Value
 ```
 
 ---
 
-## 🔬 Image Processing Pipeline
+# 🧠 Methods Used
 
-### 1. Image Preprocessing
-
-The input image is converted to **grayscale** before applying **CLAHE (Contrast Limited Adaptive Histogram Equalization)** to improve local contrast.
-
-A **Gaussian Blur** is then applied to reduce noise and create a cleaner image for segmentation.
-
-### 2. Thresholding
-
-The enhanced image is converted into a binary mask using **Otsu's Thresholding**.
-
-Otsu's method automatically determines an appropriate threshold based on the image intensity distribution.
-
-The project also compares:
-
-* Otsu Thresholding
-* Adaptive Mean Thresholding
-
-This allows the behavior of both segmentation approaches to be examined under different image conditions.
-
-### 3. Morphological Processing
-
-Morphological operations improve the binary mask before segmentation.
-
-**Opening** is used to remove small noise regions, while **Closing** helps fill small gaps and holes inside detected coin regions.
-
-### 4. Distance Transform
-
-A **Distance Transform** is applied to estimate the centers of foreground objects.
-
-These regions are used to generate markers for separating individual coins.
-
-### 5. Watershed Segmentation
-
-Touching coins are one of the main challenges in coin detection.
-
-The project uses the **Watershed algorithm** to divide connected foreground regions into separate objects.
-
-This allows coins that touch or partially overlap to be processed individually.
-
-### 6. Coin Detection
-
-After segmentation, connected components and contours are analyzed.
-
-For each valid region, the system determines properties such as its position and approximate radius using a **minimum enclosing circle**.
-
-### 7. Classification
-
-Detected coins are classified according to their measured radius.
-
-The current implementation uses five size categories:
-
-```text
-XS  → Extra Small
-S   → Small
-M   → Medium
-L   → Large
-XL  → Extra Large
-```
-
-Each class can be associated with a value, allowing the system to calculate the total value of the detected coins.
+| Method                   | Purpose                        |
+| ------------------------ | ------------------------------ |
+| Grayscale Conversion     | Simplify image representation  |
+| CLAHE                    | Improve local contrast         |
+| Gaussian Blur            | Reduce image noise             |
+| Otsu Thresholding        | Separate coins from background |
+| Adaptive Thresholding    | Thresholding comparison        |
+| Morphological Opening    | Remove small noise             |
+| Morphological Closing    | Fill gaps and holes            |
+| Distance Transform       | Estimate coin centers          |
+| Watershed                | Separate touching coins        |
+| Connected Components     | Identify individual regions    |
+| Minimum Enclosing Circle | Estimate coin radius           |
+| Radius Classification    | Classify coin sizes            |
 
 ---
 
-## 📊 Evaluation
+# 🪙 Coin Classification
 
-The system compares its predicted coin counts against manually defined **ground-truth counts**.
+Detected coins are classified according to their estimated radius.
 
-Several metrics are calculated to evaluate performance.
+| Class | Category    |
+| ----- | ----------- |
+| XS    | Extra Small |
+| S     | Small       |
+| M     | Medium      |
+| L     | Large       |
+| XL    | Extra Large |
 
-### Count Accuracy
-
-Measures how closely the predicted count matches the expected number of coins.
-
-### Mean Absolute Error — MAE
-
-Measures the average absolute difference between the predicted and true coin counts.
-
-### Root Mean Squared Error — RMSE
-
-Places a larger penalty on images with larger counting errors.
-
-### Detection Error Analysis
-
-The project also tracks:
-
-* **Over-detection** — the system detects more coins than expected.
-* **Under-detection** — the system detects fewer coins than expected.
-* **Exact detection** — the predicted count matches the ground truth.
-
-Failure cases can then be inspected individually to understand where the pipeline struggles.
+Each detected class can be assigned a value, allowing the system to calculate the **total value of all detected coins**.
 
 ---
 
-## 🛠️ Technologies
+# 📊 Evaluation Metrics
 
-| Technology       | Purpose                              |
-| ---------------- | ------------------------------------ |
-| **Python**       | Main programming language            |
-| **OpenCV**       | Image processing and computer vision |
-| **NumPy**        | Numerical and array operations       |
-| **Matplotlib**   | Image and result visualization       |
-| **Pandas**       | Evaluation and result analysis       |
-| **Pillow**       | Image handling                       |
-| **ipywidgets**   | Interactive notebook interface       |
-| **Google Colab** | Notebook execution environment       |
+The predicted coin counts are compared against manually defined ground-truth values.
+
+| Metric               | Purpose                    |
+| -------------------- | -------------------------- |
+| Count Accuracy       | Measures counting accuracy |
+| MAE                  | Mean Absolute Error        |
+| RMSE                 | Root Mean Squared Error    |
+| Over-Detection Rate  | Measures extra detections  |
+| Under-Detection Rate | Measures missed detections |
+
+The system also automatically identifies **failure cases** for further analysis.
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Clone the Repository
+# 📂 Project Structure
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/coin-counting-classification.git
-```
-
-Move into the project directory:
-
-```bash
-cd coin-counting-classification
-```
-
-### 2. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Or install the packages manually:
-
-```bash
-pip install opencv-python numpy matplotlib pandas pillow ipywidgets
-```
-
-### 3. Open the Notebook
-
-The main project is contained in:
-
-```text
-Coin_Counting_Classification_Final.ipynb
-```
-
-The notebook is designed primarily for **Google Colab**.
-
-You can upload the notebook to Colab and run the cells sequentially.
-
----
-
-## ▶️ Running the Project
-
-1. Open `Coin_Counting_Classification_Final.ipynb`.
-2. Run the library import and setup cells.
-3. Upload the coin images when prompted.
-4. Run the preprocessing and segmentation pipeline.
-5. Inspect the detected coin radii.
-6. Calibrate the classification ranges when necessary.
-7. Run the complete detection pipeline.
-8. Review the predicted counts and classifications.
-9. Run the evaluation section to analyze performance.
-
-> **Note:** Radius-based classification depends on image scale. Images captured at significantly different distances or resolutions may require recalibration.
-
----
-
-## 📂 Suggested Repository Structure
-
-```text
 coin-counting-classification/
-│
+
 ├── Coin_Counting_Classification_Final.ipynb
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
 │
 ├── images/
-│   ├── sample_01.jpg
-│   └── sample_02.jpg
+│   └── sample_coin_images/
 │
 └── results/
-    ├── detection_example.png
+    ├── detection_results/
     └── evaluation_results.csv
 ```
 
 ---
 
-## 📸 Example Results
+# 🚀 Quick Start
 
-Add some of your best detection results here before publishing the repository.
+## 1️⃣ Clone Repository
 
-For example:
-
-```markdown
-![Coin Detection Result](results/detection_example.png)
+```bash
+git clone https://github.com/yourusername/coin-counting-classification.git
+cd coin-counting-classification
 ```
 
-A good screenshot should show the **original image and final detected/classified coins** so visitors can immediately understand what the project does.
+---
+
+## 2️⃣ Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Or:
+
+```bash
+pip install opencv-python numpy matplotlib pandas pillow ipywidgets
+```
 
 ---
 
-## ⚠️ Limitations
+## 3️⃣ Open Notebook
 
-Because the current classifier relies primarily on the **detected coin radius**, its performance can be affected by:
+Start Jupyter Notebook:
 
-* Different camera distances
-* Changes in image resolution
-* Perspective distortion
-* Poor or uneven lighting
+```bash
+jupyter notebook
+```
+
+Then open:
+
+```text
+Coin_Counting_Classification_Final.ipynb
+```
+
+The notebook can also be uploaded and executed directly using **Google Colab**.
+
+---
+
+# 📸 System Features
+
+* Upload and process coin images
+* Automatic foreground segmentation
+* Otsu vs Adaptive Thresholding comparison
+* Separate touching coins using Watershed
+* Detect individual coin regions
+* Estimate coin radius
+* Classify coins by size
+* Calculate total coin count
+* Calculate total value
+* Visualize intermediate processing stages
+* Batch process multiple images
+* Compare predictions with ground truth
+* Analyze over-detection and under-detection
+* Export experiment results to CSV
+* Interactive `ipywidgets` interface
+
+---
+
+# ⚙️ Tech Stack
+
+| Technology   | Usage                              |
+| ------------ | ---------------------------------- |
+| Python       | Main Programming Language          |
+| OpenCV       | Computer Vision & Image Processing |
+| NumPy        | Numerical Operations               |
+| Matplotlib   | Visualization                      |
+| Pandas       | Results & Evaluation               |
+| Pillow       | Image Handling                     |
+| ipywidgets   | Interactive Interface              |
+| Google Colab | Notebook Environment               |
+
+---
+
+# 🔍 Thresholding Comparison
+
+The project evaluates two thresholding approaches:
+
+| Method                     | Description                                        |
+| -------------------------- | -------------------------------------------------- |
+| Otsu Thresholding          | Automatically determines a global threshold        |
+| Adaptive Mean Thresholding | Calculates thresholds based on local image regions |
+
+This comparison helps analyze segmentation performance under different image and lighting conditions.
+
+---
+
+# 🧩 Touching Coin Detection
+
+One of the main challenges is separating coins that touch each other.
+
+CoinVision solves this using:
+
+```text
+Binary Mask
+     ↓
+Distance Transform
+     ↓
+Foreground Markers
+     ↓
+Connected Components
+     ↓
+Watershed Segmentation
+     ↓
+Separated Coins
+```
+
+This allows connected coin regions to be treated as individual objects.
+
+---
+
+# 📈 Results & Analysis
+
+The system evaluates detection performance using:
+
+* Count Accuracy
+* Mean Absolute Error (MAE)
+* Root Mean Squared Error (RMSE)
+* Over-detection analysis
+* Under-detection analysis
+* Per-image error analysis
+* Failure-case visualization
+
+Results can also be exported to **CSV** for further analysis.
+
+---
+
+# ⚠️ Limitations
+
+The current classification method mainly depends on detected coin radius.
+
+Performance can therefore be affected by:
+
+* Camera distance
+* Image resolution
+* Lighting conditions
 * Shadows and reflections
-* Strongly overlapping coins
-* Incorrect foreground segmentation
-* Different coin scales between images
+* Perspective distortion
+* Coin overlap
+* Segmentation errors
+* Changes in image scale
 
-The classification radius ranges may therefore need to be recalibrated when using a new image dataset or camera setup.
-
----
-
-## 🔮 Future Improvements
-
-Possible extensions to the project include:
-
-* [ ] Automatic scale calibration
-* [ ] Perspective correction
-* [ ] Color-based coin features
-* [ ] Texture-based classification
-* [ ] More robust overlapping-coin detection
-* [ ] Automatic denomination recognition
-* [ ] CNN-based coin classification
-* [ ] Deep-learning object detection
-* [ ] Standalone desktop application
-* [ ] Web-based user interface
+Radius ranges may need to be recalibrated when using a different dataset or camera setup.
 
 ---
 
-## 👥 Team
+# 🔮 Future Improvements
 
-| Member     | Contribution                          |
-| ---------- | ------------------------------------- |
-| **Martin** | Preprocessing & Segmentation          |
-| **Marwan** | Thresholding & Morphology             |
-| **Amr**    | Watershed & Detection                 |
-| **Seif**   | Classification, Evaluation & Analysis |
+* Automatic coin scale calibration
+* Perspective correction
+* Color-based coin classification
+* Texture-based feature extraction
+* Improved overlapping coin separation
+* Automatic denomination recognition
+* CNN-based coin classification
+* Object detection using YOLO
+* Web-based detection interface
 
 ---
 
-## 📚 Project Type
+# 👥 Team
+
+| Member | Contribution                          |
+| ------ | ------------------------------------- |
+| Martin | Preprocessing & Segmentation          |
+| Marwan | Thresholding & Morphology             |
+| Amr    | Watershed & Detection                 |
+| Seif   | Classification, Evaluation & Analysis |
+
+---
+
+# 🎯 Applications
+
+* Automated coin counting
+* Coin sorting systems
+* Vending machine vision
+* Currency analysis
+* Educational computer vision systems
+* Industrial object counting
+
+---
+
+# 📚 Project Type
 
 **Computer Vision • Digital Image Processing • Classical Image Processing**
 
-This project focuses on classical computer-vision algorithms rather than deep-learning-based object detection.
+> This project uses traditional computer vision algorithms rather than Deep Learning, demonstrating how segmentation, morphology, and Watershed techniques can solve real-world object detection and counting problems.
 
 ---
 
-## ⭐ Support
+# ⭐ Support
 
-If you found this project useful or interesting, consider giving the repository a **⭐ star**.
+If you found this project useful or interesting, consider giving the repository a **⭐ Star**.
 
 ---
 
 <p align="center">
-  <b>Built with Python 🐍 and OpenCV 👁️</b>
+  <b>Built with Python 🐍 + OpenCV 👁️</b>
 </p>
